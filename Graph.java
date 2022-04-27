@@ -1,85 +1,52 @@
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+package Matrix;
 
 public class Graph {
-    
-    private String[] graphWalk;
-    private int repeatedEdge = 0;
-    private int repeatedVertex = 0;
-    private int startendSamepoint = 0;
-    // 0 = false 1 = true 3 = allowed
+    private int[][] graphG;
+    private int[][] graphNew;
 
-    Graph(String all){  
-
-        this.graphWalk = all.split(" ");
-
-
+    public Graph() {
+        this.graphG = setGraph();
+        this.graphNew = graphG;
+        // System.out.println("Origin address: " + graphG);
+        // System.out.println("Clone address: " + graphNew);
     }
 
-    public boolean Trail(int repeatedEdge, int repeatedVertex, int startendSamepoint){
-
-        //repeatedEdge = 0;
-        //repeatedVertex = 3;
-        //startendSamepoint = 3;
-
-        if(repeatedEdge == 0) return true;
-        return false;
-
+    public void powerOfMatrix(int round) {
+        for (int i = 0; i < round - 1; i++)
+            multiplyGraph();
+        getGraph();
     }
 
-    public boolean circuit(int repeatedEdge, int repeatedVertex, int startendSamepoint){
-
-        //repeatedEdge = 0;
-        //repeatedVertex = 3;
-        //startendSamepoint = 1;
-
-        if(repeatedEdge == 0 && startendSamepoint == 1) return true;
-        return false;
-
+    public int[][] setGraph() {
+        int[][] graphReturn = {
+                { 0, 1, 0 },
+                { 1, 1, 2 },
+                { 0, 2, 0 } };
+        return graphReturn;
     }
 
-    public boolean simpleCircuit(int repeatedEdge, int repeatedVertex, int startendSamepoint){
-
-        //repeatedEdge = 0;
-        //repeatedVertex = 4; // start and stop in 1 vertex
-        //startendSamepoint = 1;
-
-        if(repeatedEdge == 0 && repeatedVertex == 4 && startendSamepoint == 1) return true;
-        return false;
-
-    }
-
-    public String checkGraph(){
-
-        int sumOf = 0;
-        List<String> list = Arrays.asList(graphWalk);
-        if(graphWalk[0].equals(graphWalk[graphWalk.length-1])){
-            repeatedVertex = 1;
-            startendSamepoint = 1;
-        }
-        for(int i = 0; i < graphWalk.length; i++){
-
-            sumOf += Collections.frequency(list, graphWalk[i]);
-            if(Collections.frequency(list, graphWalk[i]) > 1){
-
-                if( i % 2 == 0 ){
-                    if(i == 0 ) repeatedVertex = 4;
-                    else if(i != graphWalk.length-1) repeatedVertex = 1;
+    public void multiplyGraph() {
+        int tmp;
+        int[][] graphTemp = new int[graphG[0].length][graphG.length];
+        for (int i = 0; i < graphG.length; i++) {
+            for (int j = 0; j < graphG[0].length; j++) {
+                tmp = 0;
+                for (int k = 0; k < graphG[i].length; k++) {
+                    tmp += graphG[i][k] * graphNew[k][j];
                 }
-                else if(i % 2 != 0 ) repeatedEdge = 1;
-
+                graphTemp[i][j] = tmp;
             }
 
         }
-
-        if(sumOf == graphWalk.length) return "Path";
-        if(simpleCircuit(repeatedEdge, repeatedVertex, startendSamepoint)) return "Simple Circuit";
-        if(circuit(repeatedEdge, repeatedVertex, startendSamepoint)) return "Circuit";
-        if(Trail(repeatedEdge, repeatedVertex, startendSamepoint)) return "Trail";
-
-        return "Walk";
-
+        graphNew = graphTemp;
     }
 
+    public void getGraph() {
+        for (int[] matrix : graphNew) {
+            System.out.print("|");
+            for (int row : matrix)
+                System.out.print(" " + row + " ");
+            System.out.println("|");
+        }
+    }
 }
